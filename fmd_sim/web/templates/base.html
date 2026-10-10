@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}FMD farm networks{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Zilla+Slab:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<nav class="navbar" aria-label="Main">
+  <a class="brand" href="{{ url_for('even') }}">FMD farm networks</a>
+  <ul>
+    <li><a href="{{ url_for('even') }}" {% if active == 'even' %}aria-current="page"{% endif %}>Even network</a></li>
+    <li><a href="{{ url_for('hub') }}" {% if active == 'hub' %}aria-current="page"{% endif %}>Hub-heavy network</a></li>
+    <li><a href="{{ url_for('report') }}" {% if active == 'report' %}aria-current="page"{% endif %}>Report</a></li>
+    <li><a href="{{ url_for('settings') }}" {% if active == 'settings' %}aria-current="page"{% endif %}>Settings</a></li>
+  </ul>
+</nav>
+{% block content %}{% endblock %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

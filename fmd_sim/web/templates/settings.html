@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Settings: FMD farm networks{% endblock %}
+{% block content %}
+<main class="page">
+  <h1>Settings</h1>
+  <p class="muted">Change any setting and press Run simulation. The report and both network pages update when the run finishes.
+    {% if last %}The last run finished {{ last }}.{% else %}Nothing has been run yet.{% endif %}</p>
+
+  <form id="settings" novalidate data-seconds-per-run="{{ seconds_per_run }}">
+    {% set ns = namespace(group=None) %}
+    {% for f in fields %}
+      {% if f.group != ns.group %}
+        {% if ns.group is not none %}</fieldset>{% endif %}
+        <fieldset><legend>{{ f.group }}</legend>
+        {% set ns.group = f.group %}
+      {% endif %}
+      <div class="field" data-key="{{ f.key }}">
+        <div class="field-head">
+          <label for="f-{{ f.key }}">{{ f.label }}</label>
+          {% if f.key in placeholder_keys %}<span class="flag">placeholder</span>{% endif %}
+        </div>
+        <p class="help" id="h-{{ f.key }}">{{ f.help }}</p>
+        {% if f.kind == 'bool' %}
+          <label class="switch"><input type="checkbox" id="f-{{ f.key }}" name="{{ f.key }}" data-kind="bool"
+            data-default="{{ 'true' if defaults[f.key] else 'false' }}" {% if values[f.key] %}checked{% endif %} aria-describedby="h-{{ f.key }}"> On</label>
+        {% elif f.kind == 'choice' %}
+          <select id="f-{{ f.key }}" name="{{ f.key }}" data-kind="choice" data-default="{{ defaults[f.key] }}" aria-describedby="h-{{ f.key }}">
+            {% for value, label in f.choices %}<option value="{{ value }}" {% if values[f.key] == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+          </select>
+        {% else %}
+          <input type="number" id="f-{{ f.key }}" name="{{ f.key }}" data-kind="{{ f.kind }}" value="{{ values[f.key] }}"
+            min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" data-default="{{ defaults[f.key] }}" aria-describedby="h-{{ f.key }}">
+        {% endif %}
+        <p class="error" id="e-{{ f.key }}" role="alert"></p>
+      </div>
+    {% endfor %}
+    </fieldset>
+
+    <div class="run-bar">
+      <button type="submit" class="btn primary" id="run">Run simulation</button>
+      <button type="button" class="btn" id="reset">Reset to defaults</button>
+      <span class="estimate" id="estimate"></span>
+    </div>
+    <p class="error" id="e-_" role="alert"></p>
+    <div class="progress" id="progress" hidden>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <p id="progress-msg" role="status"></p>
+    </div>
+  </form>
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='settings.js') }}"></script>{% endblock %}

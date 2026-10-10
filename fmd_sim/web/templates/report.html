@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Report: FMD farm networks{% endblock %}
+{% block content %}
+<main class="page">
+  <h1>Report</h1>
+  {% if result %}
+    <p class="muted">From the run finished {{ result.finished }}.</p>
+    {% if running %}<p class="banner">A new run is in progress. This report still shows the previous run.</p>{% endif %}
+    {% if placeholders %}<p class="banner">This run uses {{ placeholders }} placeholder settings. Treat the numbers as a test of the code, not as final results.</p>{% endif %}
+    <p class="downloads">Download:
+      <a href="{{ url_for('results_file', filename='summary.csv') }}">summary table</a>,
+      <a href="{{ url_for('results_file', filename='all_runs.csv') }}">every run</a>,
+      <a href="{{ url_for('results_file', filename='network_stats.csv') }}">network statistics</a>,
+      <a href="{{ url_for('results_file', filename='checks.txt') }}">checks</a>.
+    </p>
+    {{ body | safe }}
+  {% else %}
+    <div class="empty">
+      <h2>No results yet</h2>
+      <p>Run the experiment once to fill this page. Go to <a href="{{ url_for('settings') }}">Settings</a> and press Run simulation.</p>
+      {% if running %}<p>A run is in progress now. This page will have results when it finishes.</p>{% endif %}
+    </div>
+  {% endif %}
+</main>
+{% endblock %}

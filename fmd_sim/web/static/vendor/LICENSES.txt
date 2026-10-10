@@ -1,0 +1,9 @@
+Third-party libraries in this folder (all MIT licence):
+
+- cytoscape.min.js      Cytoscape.js 3.34.3      https://js.cytoscape.org
+- layout-base.js        layout-base 2.0.1        https://github.com/iVis-at-Bilkent/layout-base
+- cose-base.js          cose-base 2.2.0          https://github.com/iVis-at-Bilkent/cose-base
+- cytoscape-fcose.js    cytoscape-fcose 2.2.0    https://github.com/iVis-at-Bilkent/cytoscape.js-fcose
+
+They are copied here so the app works without an internet connection.
+Load order: cytoscape, layout-base, cose-base, cytoscape-fcose.

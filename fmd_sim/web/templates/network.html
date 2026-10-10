@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}: FMD farm networks{% endblock %}
+{% block body_class %}scene-page{% endblock %}
+{% block content %}
+<main class="graph-page" data-network="{{ name }}">
+  <div id="cy" aria-label="{{ page.title }}. Click a farm to start an outbreak there."></div>
+  <p class="loading" id="loading">Building the network...</p>
+
+  <div class="top-left">
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="drawer">
+      <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+      Details
+    </button>
+    <h1 class="graph-title {{ name }}">{{ page.title }}</h1>
+    <button type="button" class="chip" id="T-chip" aria-controls="drawer">T = 0.200</button>
+  </div>
+
+  <div class="zoom" role="group" aria-label="Zoom">
+    <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+    <button type="button" id="zoom-out" aria-label="Zoom out">&minus;</button>
+    <button type="button" id="zoom-fit">Fit</button>
+  </div>
+
+  <p class="stage-hint" id="hint">Click a farm to start an outbreak there. Hover over a farm to see its links.</p>
+  <div class="tip" id="tip" role="status"></div>
+
+  <div class="bottom">
+    <div class="stage-legend">
+      <span><span class="dot s"></span>Healthy</span>
+      <span><span class="dot i"></span>Infected</span>
+      <span><span class="dot r"></span>Removed</span>
+      <span><span class="path-swatch"></span>Path the disease took</span>
+      <span>Bigger dot = more links</span>
+    </div>
+    <div class="bar" role="group" aria-label="Outbreak controls">
+      <button type="button" class="btn primary" id="start">Start at a random farm</button>
+      <button type="button" class="btn" id="play" disabled>Play</button>
+      <button type="button" class="btn" id="restart" disabled>Back to day 0</button>
+      <label class="day-label" for="day">Day <output id="day-out">0</output></label>
+      <input type="range" id="day" min="0" max="1" step="1" value="0" disabled>
+      <div class="counts" id="counts"></div>
+    </div>
+  </div>
+
+  <aside class="drawer" id="drawer" aria-label="Details and options" aria-hidden="true">
+    <div class="drawer-head">
+      <h2 class="net-title {{ name }}">{{ page.title }}</h2>
+      <button type="button" class="close" id="drawer-close" aria-label="Close details">&times;</button>
+    </div>
+    <p class="muted">{{ page.blurb }}</p>
+    <dl class="stats" id="stats"></dl>
+
+    <h3>How contagious</h3>
+    <label class="slider-label" for="T">Transmissibility T <output id="T-out">0.20</output></label>
+    <input type="range" id="T" min="0" max="0.8" step="0.005" value="0.2">
+    <p class="readout" id="readout"></p>
+    <p class="verdict" id="verdict"></p>
+
+    <h3>This outbreak</h3>
+    <canvas id="curve" aria-label="Infected farms over time"></canvas>
+    <p class="outcome" id="outcome">No outbreak yet.</p>
+    <div class="btn-row">
+      <span class="muted">Speed</span>
+      <div class="seg" role="group" aria-label="Speed" id="speed">
+        <button type="button" data-speed="4" aria-pressed="false">Slow</button>
+        <button type="button" data-speed="10" aria-pressed="true">Normal</button>
+        <button type="button" data-speed="25" aria-pressed="false">Fast</button>
+      </div>
+    </div>
+
+    <h3>View</h3>
+    <div class="btn-row">
+      <span class="muted">Links</span>
+      <div class="seg" role="group" aria-label="Which links to show" id="links">
+        <button type="button" data-links="all" aria-pressed="false">All</button>
+        <button type="button" data-links="infected" aria-pressed="true">Near infected</button>
+        <button type="button" data-links="off" aria-pressed="false">None</button>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="show-path" checked> Show the path the disease took</label>
+    <div class="btn-row">
+      <button type="button" class="btn" id="relayout">Rearrange farms</button>
+    </div>
+    <p class="muted small">Drag the background to move around, scroll to zoom, and drag a farm to move it.</p>
+  </aside>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='vendor/cytoscape.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/layout-base.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/cose-base.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/cytoscape-fcose.js') }}"></script>
+<script src="{{ url_for('static', filename='scene.js') }}"></script>
+{% endblock %}
