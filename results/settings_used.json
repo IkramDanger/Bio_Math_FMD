@@ -1,18 +1,18 @@
 {
-  "finished": "07 October 2026, 11:49",
+  "finished": "16 October 2026, 21:51",
   "params": {
     "n_farms": 300,
     "hub_links_per_new_farm": 3,
     "days_infectious": 14,
     "T_min": 0.0,
     "T_max": 0.6,
-    "T_steps": 25,
+    "T_steps": 60,
     "runs_per_setting": 500,
     "new_network_each_run": true,
     "seed_rule": "random_farm",
     "major_outbreak_cutoff": 0.1,
     "threshold_detect_level": 0.05,
     "random_seed": 2026,
-    "report_T": 0.3
+    "report_T": 0.25
   }
 }

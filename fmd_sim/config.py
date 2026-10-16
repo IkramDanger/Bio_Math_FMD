@@ -21,7 +21,7 @@ PARAMS = {
     # from them, because T means the same thing on both networks.
     "T_min": 0.0,                # PLACEHOLDER
     "T_max": 0.6,                # PLACEHOLDER
-    "T_steps": 25,               # PLACEHOLDER: how many T values between T_min and T_max
+    "T_steps": 60,               # PLACEHOLDER: how many T values between T_min and T_max
     "runs_per_setting": 500,     # PLACEHOLDER
     "new_network_each_run": True,  # PLACEHOLDER: True = fresh network for every run
     "seed_rule": "random_farm",  # PLACEHOLDER: one farm picked at random is infected on day 1
@@ -30,7 +30,7 @@ PARAMS = {
     "random_seed": 2026,         # PLACEHOLDER: any fixed number, so results can be repeated exactly
 
     # --- Report -----------------------------------------------------------
-    "report_T": 0.30,            # PLACEHOLDER: T used for the peak comparison in the report
+    "report_T": 0.25,            # PLACEHOLDER: T used for the peak comparison in the report
 }
 
 # Settings still to be decided. The app flags these on the Settings and Report pages.
