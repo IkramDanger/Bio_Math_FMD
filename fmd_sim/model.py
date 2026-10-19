@@ -89,7 +89,7 @@ def run_outbreak(adjacency, p, days_infectious, seed_farm, rng, track_sources=Fa
 
 
 def pick_seed_farm(n_farms, rule, rng):
-    """Which farm is infected on day 1."""
+    """Which farm is infected on day 0."""
     if rule == "random_farm":
         return int(rng.integers(n_farms))
     raise ValueError(f"Unknown seed rule: {rule}")

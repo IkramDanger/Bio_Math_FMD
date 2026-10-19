@@ -120,6 +120,10 @@ def report_html(summary, degree_summary, params, placeholder_keys, figure_srcs):
     g = _glance(summary, degree_summary, params)
     level = params["threshold_detect_level"]
 
+    placeholder_note = ('<p class="lead">Settings marked placeholder are not final. '
+                        'Change them on the Settings page and run again.</p>'
+                        if any(k in placeholder_keys for k in params) else "")
+
     readable = {"random_farm": "one farm, picked at random"}
     settings_rows = [
         [html.escape(SETTING_LABELS.get(k, k)), _fmt(readable.get(v, v) if isinstance(v, str) else v),
@@ -174,7 +178,7 @@ def report_html(summary, degree_summary, params, placeholder_keys, figure_srcs):
 
 <section class="report-block">
   <h2>Settings used</h2>
-  <p class="lead">Settings marked placeholder are not final. Change them on the Settings page and run again.</p>
+  {placeholder_note}
   {_table(["Setting", "Value", "Status"], settings_rows)}
 </section>
 """

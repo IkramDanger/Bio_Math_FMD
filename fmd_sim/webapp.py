@@ -55,7 +55,7 @@ FIELDS = [
     {"group": "The experiment", "key": "new_network_each_run", "kind": "bool",
      "label": "New network for each run", "help": "On: every run uses a freshly built network, so results don't depend on one lucky or unlucky network."},
     {"group": "The experiment", "key": "seed_rule", "kind": "choice", "choices": [["random_farm", "One farm, picked at random"]],
-     "label": "How each outbreak starts", "help": "Which farm is infected on day 1."},
+     "label": "How each outbreak starts", "help": "Which farm is infected on day 0."},
     {"group": "The experiment", "key": "random_seed", "kind": "int", "min": 0, "max": 999999, "step": 1,
      "label": "Random seed", "help": "Any whole number. The same seed always gives exactly the same results."},
     {"group": "Reading the results", "key": "major_outbreak_cutoff", "kind": "float", "min": 0.01, "max": 0.9, "step": 0.01,

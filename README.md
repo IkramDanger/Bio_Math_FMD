@@ -21,12 +21,12 @@ Both use the same model and save results to the same place.
 
 ## 1. Open a terminal in the project folder
 
-Every command in this guide must be run from inside the `fmd-network-sim` folder,
+Every command in this guide must be run from inside the `Bio_Math_FMD` folder,
 the one that contains `app.py`, `run_all.py` and this README.
 
 - **Windows:** open the folder in File Explorer, click the address bar, type `cmd` and press Enter.
 - **Mac:** open Terminal, type `cd ` (with a space), drag the folder into the window and press Enter.
-- **VS Code:** use File → Open Folder, choose `fmd-network-sim`, then Terminal → New Terminal.
+- **VS Code:** use File → Open Folder, choose `Bio_Math_FMD`, then Terminal → New Terminal.
 
 To check you're in the right place, type `dir` (Windows) or `ls` (Mac/Linux).
 You should see `app.py` in the list.
@@ -60,10 +60,10 @@ pip install -r requirements.txt
 Optionally, check that everything works:
 
 ```
-python -m pytest
+python run_all.py --quick
 ```
 
-You should see `12 passed` after about 20 seconds.
+It should finish in a few seconds and say `Tables, checks and figures saved in results_quick/`.
 
 **Each time you open a new terminal later**, switch the project space back on with
 the second line above (`.venv\Scripts\activate` or `source .venv/bin/activate`).
@@ -103,7 +103,7 @@ Use the navbar at the top to move between them.
 | **Even network** | Watch outbreaks spread on the even network. |
 | **Hub-heavy network** | The same for the hub-heavy network. |
 | **Report** | Read the results of the last run: headline results, figures, network statistics, checks against theory, and the settings used. Download the tables. |
-| **Settings** | Change any setting and press **Run simulation** to run the experiment again. Settings marked *placeholder* are not final yet. |
+| **Settings** | Change any setting and press **Run simulation** to run the experiment again. A setting marked *placeholder* is not final yet (none are at the moment). |
 
 ### Using the network pages
 
@@ -125,12 +125,70 @@ panel with everything else.
 - **View:** which links to show (*All*, *Near infected* or *None*), whether to show the disease's path, and **Rearrange farms** for a fresh layout.
 
 Bigger dots are farms with more links, using the same size rule on both pages.
-Healthy farms are green-grey, infected farms are amber, removed farms are dark
+Healthy farms are blue, infected farms are amber, removed farms are dark
 grey, and the dark ring marks where the outbreak started.
 
 The network drawings use [Cytoscape.js](https://js.cytoscape.org) with the fcose
 layout. The library files are included in `fmd_sim/web/static/vendor/`, so the
 app works without an internet connection.
+
+### How the app works
+
+The app is a small website that runs on your own computer. Nothing is sent
+over the internet.
+
+- **`python app.py`** starts a [Flask](https://flask.palletsprojects.com) web
+  server at `http://127.0.0.1:8000`. The code is in `fmd_sim/webapp.py`.
+- **The same model, not a copy.** The app uses the model in `fmd_sim/model.py`
+  and the formulas in `fmd_sim/theory.py`, the same code that `run_all.py` uses.
+  The browser only draws the results.
+
+**What happens on a network page**
+
+1. When the app starts, it builds one even network and one hub-heavy network
+   with the current settings and random seed. This is the same pair as the first
+   pair in the experiment, so you see a network that was actually used.
+2. The app works out where to draw each farm (Kamada-Kawai layout) and sends the
+   farms, links and network statistics to the browser.
+3. When you start an outbreak, the browser sends the farm and the T value to the
+   app. The app runs one outbreak with the model and sends back the day each farm
+   was infected and which farm it caught it from.
+4. The browser plays that outbreak back day by day. Moving the day slider or
+   changing the speed only changes the playback. It does not run the model again.
+
+Each outbreak on these pages is random, so the same farm and T can give a
+different outbreak each time. This is expected: the model is stochastic (it
+uses chance).
+
+**What happens when you press Run simulation**
+
+1. The app checks the settings. If a value is not allowed, the Settings page
+   tells you which one and why.
+2. The full experiment runs in the background. The Settings page asks the app
+   for progress every half second and shows it in the progress bar. You can
+   refresh the page or leave it; the run keeps going. Only one run can
+   go at a time.
+3. When it finishes, the app saves everything to `results/` (the same files as
+   `run_all.py`), rebuilds the network pages with the new settings and fills the
+   Report page.
+
+**Where settings are kept**
+
+- The defaults come from `fmd_sim/config.py`.
+- Settings you change in the app are saved with the results in
+  `results/settings_used.json`. The app loads them again next time it starts.
+  They do not change `fmd_sim/config.py`.
+- A new run replaces the files in `results/`. To keep old results, copy the
+  folder first.
+
+| Part | File |
+|---|---|
+| Web server, pages and API | `fmd_sim/webapp.py` |
+| Page layouts | `fmd_sim/web/templates/` |
+| Network page drawing and playback | `fmd_sim/web/static/scene.js` |
+| Settings page and progress bar | `fmd_sim/web/static/settings.js` |
+| Colours and styles | `fmd_sim/web/static/style.css` |
+| Report page content | `fmd_sim/report.py` |
 
 ---
 
